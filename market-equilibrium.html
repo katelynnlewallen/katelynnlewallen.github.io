@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Equilibrium - Katelynn Lewallen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #2c3e50;
+            --primary-light: #4a5f7a;
+            --accent: #c7956d;
+            --accent-light: #e8d5c4;
+            --bg: #fafaf8;
+            --text: #2d2d2d;
+            --text-light: #6b6b6b;
+            --border: #e8e6e3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 248, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .breadcrumb {
+            margin-top: 80px;
+            padding: 2rem 3rem 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .page-header {
+            padding: 2rem 3rem 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-top: 2rem;
+            max-width: 700px;
+            font-weight: 300;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem 5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section p {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar {
+            animation: fadeInUp 0.8s ease 0.5s backwards;
+        }
+
+        .sidebar-box {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: var(--bg);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .resource-link:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(5px);
+            border-color: var(--accent);
+        }
+
+        .key-concept {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .key-concept h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .key-concept p {
+            margin-bottom: 0;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            border: 2px solid var(--border);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                padding: 2rem 2rem 2rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .content {
+                padding: 0 2rem 4rem;
+            }
+
+            .section {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../index.html" class="logo">Katelynn Lewallen</a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../research.html">Research</a></li>
+                <li><a href="../teaching.html">Teaching</a></li>
+                <li><a href="../CV 1-12-26.pdf">CV</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="breadcrumb">
+            <a href="../teaching.html">← Back to Teaching</a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Market Equilibrium</h1>
+            <p class="page-subtitle">
+                Understanding how supply and demand interact to determine prices and quantities
+            </p>
+        </div>
+
+        <div class="content">
+            <div class="content-grid">
+                <div class="main-content">
+                    <section class="section">
+                        <h2 class="section-title">Overview</h2>
+                        <p>
+                            Market equilibrium occurs when the quantity demanded equals the quantity supplied. At this point, there is no tendency for price to change unless market conditions shift.
+                        </p>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Key Concepts</h2>
+                        
+                        <div class="key-concept">
+                            <h4>Supply and Demand</h4>
+                            <p>Supply represents how much producers are willing to sell at different prices. Demand represents how much consumers are willing to buy at different prices.</p>
+                        </div>
+
+                        <div class="formula-box">
+                            Equilibrium: Qᵈ = Qˢ
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Equilibrium Price</h4>
+                            <p>The price at which quantity demanded equals quantity supplied. Also called the "market-clearing price."</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Surplus and Shortage</h4>
+                            <p>Surplus occurs when Qˢ > Qᵈ (price too high). Shortage occurs when Qᵈ > Qˢ (price too low). Market forces push toward equilibrium.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Comparative Statics</h4>
+                            <p>Analyzing how equilibrium changes when supply or demand curves shift due to changes in external factors.</p>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Shifts in Supply and Demand</h2>
+                        <p><strong>Demand shifts right when:</strong></p>
+                        <ul>
+                            <li>Income increases (for normal goods)</li>
+                            <li>Price of substitutes increases</li>
+                            <li>Price of complements decreases</li>
+                            <li>Consumer preferences favor the good</li>
+                            <li>Population increases</li>
+                        </ul>
+
+                        <p><strong>Supply shifts right when:</strong></p>
+                        <ul>
+                            <li>Production costs decrease</li>
+                            <li>Technology improves</li>
+                            <li>Number of sellers increases</li>
+                            <li>Prices of inputs decrease</li>
+                        </ul>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Welfare Analysis</h2>
+                        <div class="key-concept">
+                            <h4>Consumer Surplus</h4>
+                            <p>The difference between what consumers are willing to pay and what they actually pay. Area below demand curve and above price.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Producer Surplus</h4>
+                            <p>The difference between the price producers receive and their willingness to sell. Area above supply curve and below price.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Total Surplus</h4>
+                            <p>Sum of consumer and producer surplus. Maximized at competitive equilibrium (absent externalities).</p>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Practice Problems</h2>
+                        <ol>
+                            <li>Given demand: Q = 100 - 2P and supply: Q = 20 + 3P, find equilibrium price and quantity.</li>
+                            <li>If demand increases by 20 units at every price, what happens to equilibrium?</li>
+                            <li>Calculate consumer surplus, producer surplus, and deadweight loss with a price floor at $30.</li>
+                            <li>How does a tax affect equilibrium price and quantity? Who bears the tax burden?</li>
+                        </ol>
+                    </section>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Course Materials</h3>
+                        <a href="#" class="resource-link">📄 Lecture Notes (PDF)</a>
+                        <a href="#" class="resource-link">📊 Problem Set 2</a>
+                        <a href="#" class="resource-link">✏️ Solution Key</a>
+                        <a href="#" class="resource-link">📈 Supply & Demand Graphs</a>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Additional Resources</h3>
+                        <a href="#" class="resource-link">📚 Textbook Chapter 2</a>
+                        <a href="#" class="resource-link">🎥 Video Lecture</a>
+                        <a href="#" class="resource-link">💡 Study Guide</a>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Related Topics</h3>
+                        <a href="consumer-theory.html" class="resource-link">Consumer Theory</a>
+                        <a href="game-theory.html" class="resource-link">Game Theory</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Katelynn Lewallen. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Theory - Katelynn Lewallen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #2c3e50;
+            --primary-light: #4a5f7a;
+            --accent: #c7956d;
+            --accent-light: #e8d5c4;
+            --bg: #fafaf8;
+            --text: #2d2d2d;
+            --text-light: #6b6b6b;
+            --border: #e8e6e3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 248, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .breadcrumb {
+            margin-top: 80px;
+            padding: 2rem 3rem 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .page-header {
+            padding: 2rem 3rem 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-top: 2rem;
+            max-width: 700px;
+            font-weight: 300;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem 5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section p {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar {
+            animation: fadeInUp 0.8s ease 0.5s backwards;
+        }
+
+        .sidebar-box {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: var(--bg);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .resource-link:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(5px);
+            border-color: var(--accent);
+        }
+
+        .key-concept {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .key-concept h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .key-concept p {
+            margin-bottom: 0;
+        }
+
+        .game-matrix {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        .game-matrix table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .game-matrix th, .game-matrix td {
+            border: 1px solid var(--border);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .game-matrix th {
+            background: var(--accent-light);
+            font-weight: 600;
+        }
+
+        footer {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                padding: 2rem 2rem 2rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .content {
+                padding: 0 2rem 4rem;
+            }
+
+            .section {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../index.html" class="logo">Katelynn Lewallen</a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../research.html">Research</a></li>
+                <li><a href="../teaching.html">Teaching</a></li>
+                <li><a href="../CV 1-12-26.pdf">CV</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="breadcrumb">
+            <a href="../teaching.html">← Back to Teaching</a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Game Theory</h1>
+            <p class="page-subtitle">
+                Strategic decision-making when outcomes depend on the actions of multiple players
+            </p>
+        </div>
+
+        <div class="content">
+            <div class="content-grid">
+                <div class="main-content">
+                    <section class="section">
+                        <h2 class="section-title">Overview</h2>
+                        <p>
+                            Game theory analyzes strategic interactions where each player's optimal choice depends on what they expect others to do. It's fundamental to understanding competition, cooperation, and strategic behavior in economics.
+                        </p>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Key Concepts</h2>
+                        
+                        <div class="key-concept">
+                            <h4>Players, Strategies, and Payoffs</h4>
+                            <p><strong>Players:</strong> Decision-makers in the game<br>
+                            <strong>Strategies:</strong> Complete plans of action for each player<br>
+                            <strong>Payoffs:</strong> Outcomes or utilities each player receives</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Nash Equilibrium</h4>
+                            <p>A set of strategies where no player can improve their payoff by unilaterally changing their strategy. Each player's strategy is a best response to others' strategies.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Dominant Strategy</h4>
+                            <p>A strategy that yields a higher payoff than any other strategy, regardless of what other players do.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Dominated Strategy</h4>
+                            <p>A strategy that always yields a lower payoff than some other strategy. Rational players never play dominated strategies.</p>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Classic Example: Prisoner's Dilemma</h2>
+                        <p>Two suspects are interrogated separately. Each can confess or stay silent.</p>
+                        
+                        <div class="game-matrix">
+                            <strong>Payoff Matrix (years in prison)</strong>
+                            <table>
+                                <tr>
+                                    <th></th>
+                                    <th>Suspect 2: Silent</th>
+                                    <th>Suspect 2: Confess</th>
+                                </tr>
+                                <tr>
+                                    <th>Suspect 1: Silent</th>
+                                    <td>-1, -1</td>
+                                    <td>-10, 0</td>
+                                </tr>
+                                <tr>
+                                    <th>Suspect 1: Confess</th>
+                                    <td>0, -10</td>
+                                    <td>-5, -5</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <p>
+                            <strong>Nash Equilibrium:</strong> Both confess (-5, -5)<br>
+                            <strong>Key Insight:</strong> Individual rationality leads to worse collective outcome than mutual cooperation (-1, -1)
+                        </p>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Types of Games</h2>
+                        <ul>
+                            <li><strong>Simultaneous vs. Sequential:</strong> Players move at the same time or in turns</li>
+                            <li><strong>Zero-Sum vs. Non-Zero-Sum:</strong> One player's gain equals another's loss, or mutual gains/losses possible</li>
+                            <li><strong>Cooperative vs. Non-Cooperative:</strong> Whether binding agreements are possible</li>
+                            <li><strong>Perfect vs. Imperfect Information:</strong> Whether players know all previous moves</li>
+                            <li><strong>Repeated Games:</strong> Same game played multiple times (enables cooperation through reputation)</li>
+                        </ul>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Solution Concepts</h2>
+                        <div class="key-concept">
+                            <h4>Backward Induction</h4>
+                            <p>Solving sequential games by working backwards from the end. Used to find subgame perfect equilibria.</p>
+                        </div>
+
+                        <div class="key-concept">
+                            <h4>Mixed Strategy Equilibrium</h4>
+                            <p>When players randomize between strategies with specific probabilities. Each player is indifferent between their pure strategies.</p>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">Practice Problems</h2>
+                        <ol>
+                            <li>Find all Nash equilibria in a 2x2 game with given payoff matrix.</li>
+                            <li>Determine if any players have dominant strategies.</li>
+                            <li>Solve a sequential game using backward induction.</li>
+                            <li>Calculate the mixed strategy Nash equilibrium for matching pennies.</li>
+                            <li>Analyze how cooperation can emerge in repeated prisoner's dilemma.</li>
+                        </ol>
+                    </section>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Course Materials</h3>
+                        <a href="#" class="resource-link">📄 Lecture Notes (PDF)</a>
+                        <a href="#" class="resource-link">📊 Problem Set 3</a>
+                        <a href="#" class="resource-link">✏️ Solution Key</a>
+                        <a href="#" class="resource-link">🎮 Game Examples</a>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Additional Resources</h3>
+                        <a href="#" class="resource-link">📚 Textbook Chapter 9</a>
+                        <a href="#" class="resource-link">🎥 Video: Nash Equilibrium</a>
+                        <a href="#" class="resource-link">💡 Study Guide</a>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">Related Topics</h3>
+                        <a href="consumer-theory.html" class="resource-link">Consumer Theory</a>
+                        <a href="market-equilibrium.html" class="resource-link">Market Equilibrium</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Katelynn Lewallen. All rights reserved.</p>
+    </footer>
+</body>
+</html>
