@@ -164,6 +164,53 @@
             margin-bottom: 2rem;
         }
 
+        /* Contact Section */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.contact-item a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-item:hover a {
+    color: var(--accent);
+}
+
         .hero-image {
             animation: fadeInRight 0.8s ease 0.4s backwards;
             position: relative;
@@ -359,6 +406,20 @@
                 <p class="hero-description">
                     Welcome to my personal website! I am a 2nd year PhD Student at UW Madison with interests broadly in empirical microeconomics, specializing in education. 
                 </p>
+                <div class="contact-info">
+    <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <a href="mailto:klewallen@wisc.edu">klewallen@wisc.edu</a>
+    </div>
+    <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <span>Madison, WI</span>
+    </div>
+    <div class="contact-item">
+        <div class="contact-icon">🏛️</div>
+        <span>Department of Economics, UW Madison</span>
+    </div>
+</div>
             </div>
             <div class="hero-image">
                 <div class="image-wrapper">
