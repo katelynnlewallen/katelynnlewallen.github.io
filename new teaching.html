@@ -386,6 +386,27 @@
                 font-size: 2.5rem;
             }
         }
+
+        .topic-tag {
+    padding: 0.4rem 1rem;
+    background: var(--accent-light);
+    color: var(--primary-dark);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-decoration: none;  /* Add this */
+    display: inline-block;  /* Add this */
+    transition: all 0.3s ease;  /* Add this */
+}
+
+/* Add this hover effect */
+.topic-tag:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(199, 149, 109, 0.3);
+}
+        
     </style>
 </head>
 <body>
@@ -420,11 +441,10 @@
                     <p class="course-description">
                     </p>
                     <div class="course-topics">
-                        <span class="topic-tag">Consumer Theory</span>
-                        <span class="topic-tag">Market Equilibrium</span>
-                        <span class="topic-tag">Game Theory</span>
+                        <a href="topics/consumer-theory.html" class="topic-tag">Consumer Theory</a>
+                        <a href="topics/market-equilibrium.html" class="topic-tag">Market Equilibrium</a>
+                         <a href="topics/game-theory.html" class="topic-tag">Game Theory</a>
                     </div>
-                </div>
 
                 <div class="course-card">
                     <div class="course-header">
